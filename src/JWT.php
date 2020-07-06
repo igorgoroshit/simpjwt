@@ -1,14 +1,14 @@
 <?php
 
-namespace Igorgoroshit\JWT;
+namespace Igorgoroshit\SimpJWT;
 
-use Igorgoroshit\JWT\Helpers\ASN1;
-use Igorgoroshit\JWT\Helpers\JSON;
-use Igorgoroshit\JWT\Helpers\Base64;
+use Igorgoroshit\SimpJWT\Helpers\ASN1;
+use Igorgoroshit\SimpJWT\Helpers\JSON;
+use Igorgoroshit\SimpJWT\Helpers\Base64;
 
-use Igorgoroshit\JWT\Exceptions\SignatureInvalidException;
-use Igorgoroshit\JWT\Exceptions\BeforeValidException;
-use Igorgoroshit\JWT\Exceptions\ExpiredException;
+use Igorgoroshit\SimpJWT\Exceptions\SignatureInvalidException;
+use Igorgoroshit\SimpJWT\Exceptions\BeforeValidException;
+use Igorgoroshit\SimpJWT\Exceptions\ExpiredException;
 
 use UnexpectedValueException;
 use DomainException;
@@ -238,7 +238,7 @@ class JWT {
               throw new DomainException("OpenSSL unable to sign data");
           }
 
-          return $this->signatureFromDER($signature, $size);
+          return ASN1::fromDER($signature, $size);
 
         case 'hash_hmac':
           return hash_hmac($algorithm, $msg, $key, true);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorgoroshit\JWT\Facades;
+namespace Igorgoroshit\SimpJWT\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

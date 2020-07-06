@@ -1,8 +1,8 @@
 {
-    "name": "igorgoroshit/jwt",
+    "name": "igorgoroshit/SimpJWT",
     "version": "0.1",
-    "description": "A Json Web token(JWT) library implementation",
-    "keywords": ["jwt"],
+    "description": "A *SANE* implementation of JWT standard",
+    "keywords": ["JWT", "JWS", "JWA", "JWK"],
     "require": {
         "php": ">=5.6.0",
         "ext-json": "*",
@@ -18,7 +18,7 @@
     ],
 	"autoload": {
 		"psr-4": {
-			"Igorgoroshit\\JWT\\": "src/"
+			"Igorgoroshit\\SimpJWT\\": "src/"
 		}
 	},
     "minimum-stability": "dev"

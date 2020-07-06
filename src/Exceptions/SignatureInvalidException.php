@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorgoroshit\JWT\Exceptions;
+namespace Igorgoroshit\SimpJWT\Exceptions;
 
 class SignatureInvalidException extends \UnexpectedValueException {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorgoroshit\JWT\Helpers;
+namespace Igorgoroshit\SimpJWT\Helpers;
 
 class Base64 {
 

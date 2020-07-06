@@ -1,6 +1,6 @@
 <?php
 
-namespace Igorgoroshit\JWT\Helpers;
+namespace Igorgoroshit\SimpJWT\Helpers;
 
 use DomainException;
 
@@ -23,7 +23,7 @@ class ASN1 {
    * @param   int     $keySize the number of bits in the key
    * @return  string  the signature
    */
-  public function fromASN1($signature, $keySize) {
+  public static function fromDER($signature, $keySize) {
     // OpenSSL returns the ECDSA signatures as a binary ASN.1 DER SEQUENCE
     list($offset, $_) = self::readDER($data);
     list($offset, $r) = self::readDER($data, $offset);
@@ -47,7 +47,7 @@ class ASN1 {
    * @param   string $sig The ECDSA signature to convert
    * @return  string The encoded DER object
    */
-  public function toASN1($signature) {
+  public static function toDER($signature) {
     // Separate the signature into r-value and s-value
     list($r, $s) = str_split($sig, (int) (strlen($sig) / 2));
 
@@ -78,7 +78,7 @@ class ASN1 {
    * @param   string  $value the value to encode
    * @return  string  the encoded object
    */
-  protected function encodeDER($type, $value) {
+  protected static function encodeDER($type, $value) {
 
       $tag_header = 0;
       if ($type === self::ASN1_SEQUENCE) {
@@ -103,7 +103,7 @@ class ASN1 {
    * @param int $offset the offset of the data stream containing the object to decode
    * @return array [$offset, $data] the new offset and the decoded object
    */
-  protected function readDER($data, $offset = 0) {
+  protected static function readDER($data, $offset = 0) {
 
     $pos = $offset;
     $size = strlen($data);

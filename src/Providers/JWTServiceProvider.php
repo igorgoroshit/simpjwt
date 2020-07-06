@@ -1,11 +1,13 @@
 <?php
 
-namespace Igorgoroshit\JWT\Providers;
+namespace Igorgoroshit\SimpJWT\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Igorgoroshit\JWT\Helpers\JSON;
-use Igorgoroshit\JWT\Helpers\URLSafeBase64;
-use Igorgoroshit\JWT\JWT;
+
+use Igorgoroshit\SimpJWT\JWT;
+use Igorgoroshit\SimpJWT\Helpers\JSON;
+use Igorgoroshit\SimpJWT\Helpers\Base64;
+
 
 class JWTServiceProvider extends ServiceProvider {
     public function register()
