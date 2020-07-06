@@ -2,6 +2,4 @@
 
 namespace Igorgoroshit\SimpJWT\Exceptions;
 
-class SignatureInvalidException extends \UnexpectedValueException {
-
-}
+class SignatureInvalidException extends \UnexpectedValueException {}

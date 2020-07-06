@@ -2,6 +2,4 @@
 
 namespace Igorgoroshit\SimpJWT\Exceptions;
 
-class BeforeValidException extends \UnexpectedValueException {
-
-}
+class BeforeValidException extends \UnexpectedValueException {}

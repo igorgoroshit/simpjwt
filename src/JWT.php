@@ -45,19 +45,10 @@ class JWT {
      * @param Array       $allowed_algs  List of supported verification algorithms
      *
      * @return object      The JWT's payload as a PHP object
-     *
-     * @throws DomainException              Algorithm was not provided
-     * @throws UnexpectedValueException     Provided JWT was invalid
-     * @throws SignatureInvalidException    Provided JWT was invalid because the signature verification failed
-     * @throws BeforeValidException         Provided JWT is trying to be used before it's eligible as defined by 'nbf'
-     * @throws BeforeValidException         Provided JWT is trying to be used before it's been created as defined by 'iat'
-     * @throws ExpiredException             Provided JWT has since expired, as defined by the 'exp' claim
-     *
-     * @uses jsonDecode
-     * @uses urlsafeB64Decode
      */
     public function decode($jwt, $key = null, array $allowed_algs = [])
     {
+      $now = time();
       $tks = explode('.', $jwt);
 
       if (count($tks) != 3) {
@@ -88,8 +79,6 @@ class JWT {
         throw new UnexpectedValueException('Invalid signature encoding');
       }
 
-     // if (isset($key)) {
-
       if ( empty($header->alg) ) {
         throw new DomainException('Empty algorithm');
       }
@@ -118,13 +107,6 @@ class JWT {
         throw new DomainException('Empty key');
       }
       
-      // if (is_array($key)) {
-      //     if (isset($header->kid)) {
-      //         $key = $key[$header->kid];
-      //     } else {
-      //         throw new DomainException('"kid" empty, unable to lookup correct key');
-      //     }
-      // }
 
       // Check the signature
       if ( !$this->verify("$headb64.$bodyb64", $sig, $key, $header->alg) ) {
@@ -133,7 +115,7 @@ class JWT {
 
       // Check if the nbf if it is defined. This is the time that the
       // token can actually be used. If it's not yet that time, abort.
-      if ( isset($payload->nbf) && $payload->nbf > time() ) {
+      if ( isset($payload->nbf) && $payload->nbf > $now ) {
         throw new BeforeValidException(
             'Cannot handle token prior to ' . date(\DateTime::ISO8601, $payload->nbf)
         );
@@ -142,17 +124,17 @@ class JWT {
       // Check that this token has been created before 'now'. This prevents
       // using tokens that have been created for later use (and haven't
       // correctly used the nbf claim).
-      if ( isset($payload->iat) && $payload->iat > time() ) {
+      if ( isset($payload->iat) && $payload->iat > $now ) {
         throw new BeforeValidException(
             'Cannot handle token prior to ' . date(\DateTime::ISO8601, $payload->iat)
         );
       }
 
-      // Check if this token has expired.
-      if ( isset($payload->exp) && time() >= $payload->exp )  {
-        throw new ExpiredException('Expired token');
+      if ( isset($payload->exp) && $now >= $payload->exp )  {
+        throw new ExpiredException(
+          'Token expired at '  . date(\DateTime::ISO8601, $payload->exp)
+        );
       }
-      //}
 
       return $payload;
     }
@@ -164,11 +146,8 @@ class JWT {
      * @param object|array $payload PHP object or array
      * @param string       $key     The secret key
      * @param string       $alg     The signing algorithm. Supported
-     *                              algorithms are 'HS256', 'HS384' and 'HS512'
      *
      * @return string      A signed JWT
-     * @uses jsonEncode
-     * @uses urlsafeB64Encode
      */
     public function encode($payload, $key, $alg = 'HS256', $keyId = null)
     {
@@ -204,10 +183,8 @@ class JWT {
      * @param string $msg          The message to sign
      * @param string|resource $key The secret key
      * @param string $alg       The signing algorithm. Supported algorithms
-     *                               are 'HS256', 'HS384', 'HS512' and 'RS256'
      *
      * @return string          An encrypted message
-     * @throws DomainException Unsupported algorithm was specified
      */
     private function sign($msg, $key, $alg = 'HS256')
     {
@@ -257,7 +234,6 @@ class JWT {
      * @param string|resource $key for HS*, a string key works. for RS*, must be a resource of an openssl public key
      * @param string $alg
      * @return bool
-     * @throws DomainException Invalid Algorithm or OpenSSL failure
      */
     private function verify($msg, $signature, $key, $alg)
     {
@@ -273,7 +249,6 @@ class JWT {
         case 'ecdsa':
 
           $success = openssl_verify($msg, $signature, $key, $algorithm);
-
           if ($success === -1) {
               throw new DomainException("OpenSSL unable to verify data: " . openssl_error_string());
           }

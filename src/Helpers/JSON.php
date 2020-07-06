@@ -6,7 +6,7 @@ use DomainException;
 
 class JSON {
 
-  protected static function decode($input) {   
+  public static function decode($input) {   
 
     $obj = json_decode($input, false, 512, JSON_BIGINT_AS_STRING);
     
@@ -23,7 +23,7 @@ class JSON {
   }
 
 
-  protected static function encode($input) {
+  public static function encode($input) {
 
     $json = json_encode($input);
     

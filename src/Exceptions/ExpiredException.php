@@ -2,6 +2,4 @@
 
 namespace Igorgoroshit\SimpJWT\Exceptions;
 
-class ExpiredException extends \UnexpectedValueException {
-
-}
+class ExpiredException extends \UnexpectedValueException {}
