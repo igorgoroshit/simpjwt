@@ -1,0 +1,25 @@
+{
+    "name": "igorgoroshit/jwt",
+    "version": "0.1",
+    "description": "A Json Web token(JWT) library implementation",
+    "keywords": ["jwt"],
+    "require": {
+        "php": ">=5.6.0",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-hash": "*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Igor Goroshit",
+            "email": "igor@webt.co.il"
+        }
+    ],
+	"autoload": {
+		"psr-4": {
+			"Igorgoroshit\\JWT\\": "src/"
+		}
+	},
+    "minimum-stability": "dev"
+}
