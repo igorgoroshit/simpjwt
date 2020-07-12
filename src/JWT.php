@@ -15,6 +15,8 @@ use DomainException;
 
 class JWT {
 
+    public static $leeway = 60;
+
     /**
      * List of supported hashing algorithms
      *
@@ -48,7 +50,10 @@ class JWT {
      */
     public function decode($jwt, $key = null, array $allowed_algs = [])
     {
-      $now = time();
+      $now    = time();
+      $nowMin = $now - self::$leeway;
+      $nowMax = $now + self::$leeway;
+
       $tks = explode('.', $jwt);
 
       if (count($tks) != 3) {
@@ -115,7 +120,7 @@ class JWT {
 
       // Check if the nbf if it is defined. This is the time that the
       // token can actually be used. If it's not yet that time, abort.
-      if ( isset($payload->nbf) && $payload->nbf > $now ) {
+      if ( isset($payload->nbf) && $payload->nbf > $nowMax ) {
         throw new BeforeValidException(
             'Cannot handle token prior to ' . date(\DateTime::ISO8601, $payload->nbf)
         );
@@ -124,13 +129,13 @@ class JWT {
       // Check that this token has been created before 'now'. This prevents
       // using tokens that have been created for later use (and haven't
       // correctly used the nbf claim).
-      if ( isset($payload->iat) && $payload->iat > $now ) {
+      if ( isset($payload->iat) && $payload->iat > $nowMax ) {
         throw new BeforeValidException(
             'Cannot handle token prior to ' . date(\DateTime::ISO8601, $payload->iat)
         );
       }
 
-      if ( isset($payload->exp) && $now >= $payload->exp )  {
+      if ( isset($payload->exp) && $payload->exp < $nowMin )  {
         throw new ExpiredException(
           'Token expired at '  . date(\DateTime::ISO8601, $payload->exp)
         );
