@@ -1,6 +1,6 @@
 {
     "name": "igorgoroshit/SimpJWT",
-    "version": "0.1",
+    "version": "0.2",
     "description": "A *SANE* implementation of JWT standard",
     "keywords": ["JWT", "JWS", "JWA", "JWK"],
     "require": {
